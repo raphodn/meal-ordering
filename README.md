@@ -1,3 +1,20 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Meal Ordering](#meal-ordering)
+  - [Goal](#goal)
+  - [Tech Stack](#tech-stack)
+  - [Get started](#get-started)
+    - [Prerequisites](#prerequisites)
+    - [Step-by-step to run](#step-by-step-to-run)
+    - [API Endpoints](#api-endpoints)
+      - [GET /orders](#get-orders)
+      - [GET /orders/:order_id](#get-ordersorder_id)
+    - [Test](#test)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Meal Ordering
 
 ## Goal
