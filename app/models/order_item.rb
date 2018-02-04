@@ -23,4 +23,17 @@ class OrderItem < ApplicationRecord
 
   validates_presence_of :serving_date, :quantity, :unit_price
 
+
+  # ---------------------------------------------------------------------
+  # => METHODS
+  # ---------------------------------------------------------------------
+
+  def total_price
+    self.quantity * self.unit_price
+  end
+
+  def name
+    self.meal.name
+  end
+
 end
