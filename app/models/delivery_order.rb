@@ -19,4 +19,6 @@ class DeliveryOrder < ApplicationRecord
   # => VALIDATIONS
   # ---------------------------------------------------------------------
 
+  validates_presence_of :order_id, :serving_datetime
+
 end

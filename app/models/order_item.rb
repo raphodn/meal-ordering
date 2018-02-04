@@ -21,4 +21,6 @@ class OrderItem < ApplicationRecord
   # => VALIDATIONS
   # ---------------------------------------------------------------------
 
+  validates_presence_of :serving_date, :quantity, :unit_price
+
 end
