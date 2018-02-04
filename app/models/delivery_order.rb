@@ -32,6 +32,7 @@ class DeliveryOrder < ApplicationRecord
   end
 
   def delivery_time
+    # do timeslot instead ?? (10:00-10:30AM)
     self.serving_datetime.strftime('%I:%M%p')
   end
 

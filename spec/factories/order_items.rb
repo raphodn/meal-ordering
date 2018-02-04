@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :order_item do
     meal_id nil
     delivery_order_id nil
