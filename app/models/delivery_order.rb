@@ -12,7 +12,8 @@ class DeliveryOrder < ApplicationRecord
   # => RELATIONSHIPS
   # ---------------------------------------------------------------------
 
-  has_many :order_items
+  has_many :order_items, dependent: :destroy
+  # has_many :meals, through: :order_items
 
 
   # ---------------------------------------------------------------------
