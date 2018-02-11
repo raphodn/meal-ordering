@@ -15,6 +15,7 @@ class OrderItem < ApplicationRecord
 
   belongs_to :meal
   belongs_to :delivery_order
+  has_one :feedback, as: :ratable
 
 
   # ---------------------------------------------------------------------
@@ -34,6 +35,10 @@ class OrderItem < ApplicationRecord
 
   def name
     self.meal.name
+  end
+
+  def feedback_submitted
+    !self.feedback.nil?
   end
 
 end

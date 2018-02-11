@@ -12,12 +12,12 @@ class DeliveryOrdersController < ApplicationController
   # ---------------------------------------------------------------------
 
   def index
-    @orders = DeliveryOrder.all
+    @orders = DeliveryOrder.includes([{ order_items: :meal }, :feedback]).all
     render json: @orders, each_serializer: DeliveryOrderListSerializer
   end
 
   def show
-    @order = DeliveryOrder.includes(:order_items).find_by_order_id(params[:order_id])
+    @order = DeliveryOrder.includes([{ order_items: :meal }, :feedback]).find_by_order_id(params[:order_id])
     if @order
       render json: @order, serializer: DeliveryOrderSerializer
     else

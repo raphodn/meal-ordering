@@ -13,7 +13,7 @@ class DeliveryOrder < ApplicationRecord
   # ---------------------------------------------------------------------
 
   has_many :order_items, dependent: :destroy
-  # has_many :meals, through: :order_items
+  has_one :feedback, as: :ratable
 
 
   # ---------------------------------------------------------------------
@@ -34,6 +34,10 @@ class DeliveryOrder < ApplicationRecord
   def delivery_time
     # do timeslot instead ?? (10:00-10:30AM)
     self.serving_datetime.strftime('%I:%M%p')
+  end
+
+  def feedback_submitted
+    !self.feedback.nil?
   end
 
 end
