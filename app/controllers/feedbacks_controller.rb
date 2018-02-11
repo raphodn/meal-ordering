@@ -31,12 +31,22 @@ class FeedbacksController < ApplicationController
   def create
     @order = DeliveryOrder.includes([{ order_items: :meal }, :feedback]).find_by_order_id(params[:order_id])
     if @order
-      # create feedback
-      #
-      render status: :ok
+      feedbacks = []
+      params[:feedbacks].each do |f|
+        feedback = Feedback.new(feedback_params(f))
+        feedbacks << feedback if feedback.save
+      end
+      render json: feedbacks, status: 201
     else
       render status: :not_found
     end
+  end
+
+
+  private
+
+  def feedback_params(feedback)
+    feedback.permit(:ratable_id, :ratable_type, :rating, :comment)
   end
 
 end
