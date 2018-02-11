@@ -83,3 +83,32 @@ orders.each_with_index do |order_items, order_items_id|
     )
   end
 end
+
+first_delivery_order_id = DeliveryOrder.first.id
+first_order_item_id = OrderItem.first.id
+
+
+# ---------------------------------------------------------------------
+# => CREATE FEEDBACKS
+# ---------------------------------------------------------------------
+
+Feedback.create(
+  ratable_type: 'DeliveryOrder',
+  ratable_id: first_delivery_order_id,
+  rating: 1,
+  comment: 'Right on time for the meeting'
+)
+
+Feedback.create(
+  ratable_type: 'OrderItem',
+  ratable_id: first_order_item_id,
+  rating: 1,
+  comment: 'Healthy meal'
+)
+
+Feedback.create(
+  ratable_type: 'DeliveryOrder',
+  ratable_id: first_delivery_order_id+4,
+  rating: -1,
+  comment: 'Average'
+)

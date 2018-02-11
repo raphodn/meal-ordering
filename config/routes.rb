@@ -1,12 +1,17 @@
 Rails.application.routes.draw do
 
+  # > rails routes
+
+
   # GET /orders
   # GET /orders/:order_id
-  resources :delivery_orders, path: 'orders', param: :order_id, only: [:index, :show]
-
   # GET /orders/:order_id/feedbacks
   # POST /orders/:order_id/feedbacks
-
-
+  resources :delivery_orders, path: 'orders', param: :order_id, only: [:index, :show] do
+    # resources :feedbacks, only: [:index, :create]
+    member do
+      resources :feedbacks, only: [:index, :create], as: 'delivery_order_feedbacks'
+    end
+  end
 
 end

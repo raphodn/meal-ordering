@@ -7,7 +7,7 @@ class Feedback < ApplicationRecord
   # field :rating, type: Integer
   # field :comment, type: String
 
-  # field :ratable, type: String
+  # field :ratable_type, type: String
   # field :ratable_id, type: Integer
 
 
