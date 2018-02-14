@@ -17,23 +17,26 @@
     <div id="app" class="container">
       <my-header></my-header>
       <my-order-list></my-order-list>
+      <my-feedback-modal></my-feedback-modal>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts (Libraires) -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
     <script defer src="/vue-app/meal-ordering.js"></script>
 
+    <!-- Scripts (Templates) -->
     <script type="text/x-template" id="my-header-template">
-      <nav class="navbar navbar-light bg-light">
+      <nav class="navbar navbar-light">
         <span class="navbar-brand mb-0 h1">My Order List</span>
+        <a class="nav-item">
+          <img src="/logo.png" height="30" alt="">
+        </a>
       </nav>
     </script>
 
     <script type="text/x-template" id="my-order-list-template">
       <div class="row">
-
         <div class="col-sm text-center" v-if="loadingOrders">fetching orders</div>
-
         <div class="col-sm" v-if="!loadingOrders">
           <span v-if="(!orders || orders.length === 0)">no orders to display :(</span>
           <table class="table table-striped" v-if="orders && orders.length > 0">
@@ -53,8 +56,8 @@
                   <i class="icon ion-clock"></i>&nbsp;<strong>{{ order.delivery_time }}</strong>
                 </td>
                 <td>
-                  <i class="icon ion-checkmark-circled" v-if="order.feedback_submitted"></i>
-                  <button type="button" class="btn btn-outline-primary" v-if="!order.feedback_submitted">Leave Feedback</button>
+                  <i class="icon ion-checkmark" v-if="order.feedback_submitted"></i>
+                  <button type="button" class="btn btn-outline-primary btn-sm" v-if="!order.feedback_submitted" @click="openFeedbackModal(order)">Leave Feedback</button>
                 </td>
               </tr>
             </tbody>
@@ -62,6 +65,30 @@
           <hr>
           <div class="smaller float-right" v-if="lastUpdated">
             <i>Last updated: {{ lastUpdated | formatDateTime }}</i>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script type="text/x-template" id="my-feedback-modal-template">
+      <!-- <div v-show="displayModal" class="modal" tabindex="-1" role="dialog"> -->
+      <div v-bind:style="{ 'display': displayModal }" class="modal" tabindex="-1" role="dialog">
+      <!-- <div v-bind:style="displayModal" class="modal" tabindex="-1" role="dialog"> -->
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Order #{{ currentOrder.order_id }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-outline-dark" data-dismiss="modal" @click="closeModal()">Close</button>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,9 @@
 // => COMPONENTS
 // ---------------------------------------------------------------------
 
+// communication between components
+var bus = new Vue();
+
 // header
 Vue.component('my-header', {
   template: '#my-header-template'
@@ -12,9 +15,9 @@ Vue.component('my-order-list', {
   template: '#my-order-list-template',
   data: function() {
     return {
-      lastUpdated: undefined,
+      orders: [],
       loadingOrders: false,
-      orders: []
+      lastUpdated: undefined
     }
   },
   methods: {
@@ -32,10 +35,41 @@ Vue.component('my-order-list', {
           console.error(err);
           this.loadingOrders = false;
         });
+    },
+    openFeedbackModal: function(order) {
+      bus.$emit('showModal', order);
     }
   },
   mounted: function() {
     this.getOrderList();
+  }
+});
+
+// feedback modal
+Vue.component('my-feedback-modal', {
+  template: '#my-feedback-modal-template',
+  data: function() {
+    return {
+      displayModal: 'none',
+      currentOrder: {}
+    }
+  },
+  created: function() {
+    bus.$on('showModal', this.openModal);
+  },
+  methods: {
+    openModal: function(order) {
+      console.log('openModal', order);
+      this.displayModal = 'block';
+      this.currentOrder = order;
+    },
+    saveFeedback: function() {
+      console.log('saveFeedback');
+    },
+    closeModal: function() {
+      // this.$emit('close');
+      this.displayModal = 'none';
+    }
   }
 });
 
