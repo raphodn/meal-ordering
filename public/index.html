@@ -1,24 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Meal Ordering</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="/vue-app/common.css">
   </head>
 
   <body>
-    Hello World!
-    <div id="app">
-      {{ message }}
+    <div id="app" class="container">
+      <my-header></my-header>
+      <my-order-list></my-order-list>
     </div>
-  </body>
 
-  <script>
-  var app = new Vue({
-    el: '#app',
-    data: {
-      message: 'Hello Vue!'
-    }
-  })
-  </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+    <script defer src="/vue-app/meal-ordering.js"></script>
+
+    <script type="text/x-template" id="my-header-template">
+      <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">My Order List</span>
+      </nav>
+    </script>
+
+    <script type="text/x-template" id="my-order-list-template">
+      <div class="row">
+
+        <div class="col-sm text-center" v-if="loadingOrders">fetching orders</div>
+
+        <div class="col-sm" v-if="!loadingOrders">
+          <span v-if="(!orders || orders.length === 0)">no orders to display :(</span>
+          <table class="table table-striped" v-if="orders && orders.length > 0">
+            <thead>
+              <tr>
+                <th scope="col"># ID</th>
+                <th scope="col">Delivery Date & Time</th>
+                <th scope="col">Feedback</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="order in orders">
+                <th scope="row">{{ order.order_id }}</th>
+                <td>
+                  <i class="icon ion-calendar"></i>&nbsp;{{ new Date(order.delivery_date) | formatDate }}
+                  &nbsp;
+                  <i class="icon ion-clock"></i>&nbsp;<strong>{{ order.delivery_time }}</strong>
+                </td>
+                <td>
+                  <i class="icon ion-checkmark-circled" v-if="order.feedback_submitted"></i>
+                  <button type="button" class="btn btn-outline-primary" v-if="!order.feedback_submitted">Leave Feedback</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr>
+          <div class="smaller float-right" v-if="lastUpdated">
+            <i>Last updated: {{ lastUpdated | formatDateTime }}</i>
+          </div>
+        </div>
+      </div>
+    </script>
+
+  </body>
 
 </html>

@@ -12,7 +12,7 @@ class DeliveryOrdersController < ApplicationController
   # ---------------------------------------------------------------------
 
   def index
-    @orders = DeliveryOrder.includes([{ order_items: :meal }, :feedback]).all
+    @orders = DeliveryOrder.includes([{ order_items: :meal }, :feedback]).order(serving_datetime: :desc).all
     render json: @orders, each_serializer: DeliveryOrderListSerializer
   end
 
