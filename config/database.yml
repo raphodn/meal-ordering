@@ -17,3 +17,8 @@ test:
   host: localhost
   port: 5432
   password: grain
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV['DATABASE_URL'] %>

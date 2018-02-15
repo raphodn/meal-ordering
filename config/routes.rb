@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   # > rails routes
 
+  get 'seed', to: 'application#seed_db'
 
   # GET /orders
   # GET /orders/:order_id
