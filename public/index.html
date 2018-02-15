@@ -43,7 +43,7 @@
             <thead>
               <tr>
                 <th scope="col"># ID</th>
-                <th scope="col">Delivery Date & Time</th>
+                <th scope="col"><span class="d-none d-sm-inline">Delivery </span>Date & Time</th>
                 <th scope="col">Feedback</th>
               </tr>
             </thead>
@@ -57,7 +57,7 @@
                 </td>
                 <td>
                   <i class="icon ion-checkmark" v-if="order.feedback_submitted"></i>
-                  <button type="button" class="btn btn-outline-primary btn-sm" v-if="!order.feedback_submitted" @click="openFeedbackModal(order)">Leave Feedback</button>
+                  <button type="button" class="btn btn-outline-primary btn-sm" v-if="!order.feedback_submitted" v-on:click="openFeedbackModal(order)">Leave Feedback</button>
                 </td>
               </tr>
             </tbody>
@@ -74,20 +74,103 @@
       <!-- <div v-show="displayModal" class="modal" tabindex="-1" role="dialog"> -->
       <div v-bind:style="{ 'display': displayModal }" class="modal" tabindex="-1" role="dialog">
       <!-- <div v-bind:style="displayModal" class="modal" tabindex="-1" role="dialog"> -->
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Order #{{ currentOrder.order_id }}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()">
+              <h5 class="modal-title">
+                Hello customer ! Thank you for taking the time to leave a feedback
+                <br>
+                <small>
+                  <i class="icon ion-flag"></i>
+                  order <strong>{{ order.order_id }}</strong>, delivered on <strong>{{ new Date(order.delivery_date) | formatDate }}</strong> at <strong>{{ order.delivery_time }}</strong>
+                </small>
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeModal()">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+
             <div class="modal-body">
-              <p>Modal body text goes here.</p>
+              <!-- Order Items Feedback(s) -->
+              <div class="row">
+                <div class="col-sm">
+                  <h5>
+                    Your Meal
+                    <span class="float-right">
+                      <button type="button" class="btn btn-outline-primary btn-sm" v-on:click="rateAllMeals(1)"><i class="icon ion-happy-outline"></i>&nbsp;&nbsp;All Great</button>
+                    </span>
+                  </h5>
+
+                </div>
+              </div>
+              <div class="row feedback-row" v-bind:class="{ 'feedback-row-rated': meal.rating }" v-for="(meal, index) in order.order_items">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-8">
+                      <span class="align-middle">{{ meal.name }}</span>
+                    </div>
+                    <div class="col-4 bigger">
+                      <span class="float-right">
+                        <i class="icon ion-happy pointer" title="great !" v-bind:class="{ 'grey': (meal.rating != 1) }" v-on:click="rateMeal(index, 1)"></i>
+                        <i class="icon ion-sad pointer" title="room for improvement.." v-bind:class="{ 'grey': (meal.rating != -1) }" v-on:click="rateMeal(index, -1)"></i>
+                        &nbsp;&nbsp;
+                        <i class="icon ion-chatbox pointer" title="leave a comment" v-bind:class="{ 'grey': !meal.comment }" v-on:click="toggleMealComment(index)"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row" v-if="meal.showCommentInput">
+                    <div class="col">
+                      <input class="form-control form-control-sm" type="text" v-model="meal.comment" placeholder="leave a comment here..">
+                      <!-- <small class="form-text text-muted"></small> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr>
+
+              <!-- Delivery Feedback -->
+              <div class="row">
+                <div class="col-sm">
+                  <h5 class="fake-required">Your Delivery</h5>
+                </div>
+              </div>
+              <div class="row feedback-row" v-bind:class="{ 'feedback-row-rated': order.rating }">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-8">
+                      <span class="align-middle">On time ? No hassle ?</span>
+                    </div>
+                    <div class="col-4 bigger">
+                      <span class="float-right">
+                        <i class="icon ion-happy pointer" title="great !" v-bind:class="{ 'grey': (order.rating != 1) }" v-on:click="rateOrder(1)"></i>
+                        <i class="icon ion-sad pointer" title="room for improvement.." v-bind:class="{ 'grey': (order.rating != -1) }" v-on:click="rateOrder(-1)"></i>
+                        &nbsp;&nbsp;
+                        <i class="icon ion-chatbox pointer" title="leave a comment" v-bind:class="{ 'grey': !order.comment }" v-on:click="toggleOrderComment()"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row" v-if="order.showCommentInput">
+                    <div class="col">
+                      <input class="form-control form-control-sm" type="text" v-model="order.comment" placeholder="leave a comment here..">
+                      <!-- <small class="form-text text-muted"></small> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="card" v-for="meal in order.order_items">
+                <div class="card-body">
+                  <p class="card-text">{{ meal.name }}</p>
+                </div>
+                <div class="card-footer bg-transparent"><span class="float-right">Footer</span></div>
+              </div> -->
+
             </div>
+
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Save changes</button>
-              <button type="button" class="btn btn-outline-dark" data-dismiss="modal" @click="closeModal()">Close</button>
+              <button type="button" class="btn btn-primary" v-on:click="saveFeedback()" :disabled="!order.rating"><i class="icon white ion-paper-airplane"></i>&nbsp;&nbsp;Send Feedback</button>
+              <button type="button" class="btn btn-outline-dark" data-dismiss="modal" v-on:click="closeModal()">Cancel</button>
             </div>
           </div>
         </div>
